@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GreenProof CO₂ Tracker</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f4f8f7;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .container {
+      background-color: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 400px;
+    }
+
+    h2 {
+      text-align: center;
+      color: #2d6a4f;
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+      color: #344e41;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+
+    button {
+      margin-top: 25px;
+      width: 100%;
+      padding: 12px;
+      background-color: #2d6a4f;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #1b4332;
+    }
+
+    #result {
+      margin-top: 20px;
+      font-size: 16px;
+      color: #333;
+      text-align: center;
+      word-break: break-word;
+      white-space: pre-line;
+    }
+
+    
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>GreenProof CO₂ Tracker</h2>
+
+    <label>How many kilometers did you drive?</label>
+    <input type="number" id="carKm" />
+
+    <label>How many kilograms of meat do you consume per month?</label>
+    <input type="number" id="meatKg" />
+
+    <label>How many kWh of electricity do you consume per month?</label>
+    <input type="number" id="electricityKwh" />
+
+    <label>How many hours did you travel by plane?</label>
+    <input type="number" id="flightHours" />
+
+    <label>How many m³ of natural gas do you consume per month?</label>
+    <input type="number" id="naturalGasM3" />
+
+    <button onclick="getCarbon()">Submit</button>
+
+    <p id="result"></p>
+    <button id="copyBtn" onclick="copyTx()" style="display: none;">Copy TX Hash</button>
+  </div>
+
+  <script src="main.js"></script>
+</body>
+</html>
