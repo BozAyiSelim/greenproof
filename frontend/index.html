@@ -4,101 +4,153 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>GreenProof CO₂ Tracker</title>
+
   <style>
+    /* Fade-in animation used for result box */
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    /* Page base styles */
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #f4f8f7;
-      margin: 0;
-      padding: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f4f7f6;
       display: flex;
-      justify-content: center;
+      flex-direction: column;
       align-items: center;
-      min-height: 100vh;
+      padding: 2rem;
     }
 
-    .container {
-      background-color: white;
-      padding: 30px;
-      border-radius: 12px;
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    /* Main title styling */
+    h1 {
+      color: #2c5c47;
+      margin-bottom: 1.5rem;
+    }
+
+    /* Form container styling */
+    form {
+      background: white;
+      padding: 2rem;
+      border-radius: 16px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
       width: 100%;
-      max-width: 400px;
+      max-width: 450px;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
     }
 
-    h2 {
-      text-align: center;
-      color: #2d6a4f;
-      margin-bottom: 20px;
-    }
-
-    label {
-      display: block;
-      margin-top: 15px;
-      font-weight: bold;
-      color: #344e41;
-    }
-
+    /* Input field styling */
     input {
-      width: 100%;
-      padding: 10px;
-      margin-top: 5px;
+      padding: 0.75rem;
       border: 1px solid #ccc;
-      border-radius: 6px;
+      border-radius: 8px;
+      font-size: 1rem;
     }
 
+    /* Submit button styling */
     button {
-      margin-top: 25px;
-      width: 100%;
-      padding: 12px;
-      background-color: #2d6a4f;
+      background-color: #2c5c47;
       color: white;
+      padding: 0.75rem;
       border: none;
-      border-radius: 6px;
-      font-size: 16px;
+      border-radius: 8px;
+      font-size: 1rem;
       cursor: pointer;
+      transition: background 0.3s;
     }
 
+    /* Submit button hover effect */
     button:hover {
-      background-color: #1b4332;
+      background-color: #244b3b;
     }
 
+    /* Result display box styling */
     #result {
-      margin-top: 20px;
-      font-size: 16px;
-      color: #333;
+      display: none; /* Hidden by default */
+      opacity: 0;
+      animation: fadeIn 0.5s ease-in-out forwards; /* Smooth fade-in */
+      margin-top: 2rem;
+      padding: 1.5rem;
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
       text-align: center;
-      word-break: break-word;
-      white-space: pre-line;
+      max-width: 500px;
+      color: #333;
     }
 
-    
+    /* Link style inside result box */
+    #result a {
+      word-break: break-all;
+      color: #2c5c47; 
+      font-weight: bold;
+      text-decoration: underline;
+    }
+
+    /* Copy transaction hash button */
+    #copyBtn {
+      margin-top: 1rem;
+      display: none; /* Hidden by default */
+      background-color: #2c5c47;
+      color: white;
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    /* Hover effect for copy button */
+    #copyBtn:hover {
+      background-color: #244b3b;
+    }
+
+    /* Styling for reward medals (visual feedback based on performance) */
+    .medal {
+      font-size: 2rem;
+      margin: 0.5rem 0;
+    }
+
+    .gold { color: #d4af37; }   /* Gold medal */
+    .silver { color: #c0c0c0; } /* Silver medal */
+    .bronze { color: #cd7f32; } /* Bronze medal */
   </style>
 </head>
+
 <body>
-  <div class="container">
-    <h2>GreenProof CO₂ Tracker</h2>
+  <!-- Application title -->
+  <h1>GreenProof CO₂ Tracker</h1>
 
-    <label>How many kilometers did you drive?</label>
-    <input type="number" id="carKm" />
+  <!-- User input form for CO2-related activities -->
+  <form onsubmit="getCarbon(); return false;"> <!-- Calls getCarbon() on submit -->
+    <label>How many kilometers did you drive?
+      <input type="number" id="carKm" />
+    </label>
+    <label>How many kilograms of meat do you consume per month?
+      <input type="number" id="meatKg" />
+    </label>
+    <label>How many kWh of electricity do you consume per month?
+      <input type="number" id="electricityKwh" />
+    </label>
+    <label>How many hours did you travel by plane?
+      <input type="number" id="flightHours" />
+    </label>
+    <label>How many m³ of natural gas do you consume per month?
+      <input type="number" id="naturalGasM3" />
+    </label>
+    <button type="submit">Submit</button>
+  </form>
 
-    <label>How many kilograms of meat do you consume per month?</label>
-    <input type="number" id="meatKg" />
+  <!-- Result box that appears after form submission -->
+  <div id="result"></div>
 
-    <label>How many kWh of electricity do you consume per month?</label>
-    <input type="number" id="electricityKwh" />
+  <!-- Button to copy transaction hash (e.g. to clipboard) -->
+  <button id="copyBtn" onclick="copyTx()">Copy TX Hash</button>
 
-    <label>How many hours did you travel by plane?</label>
-    <input type="number" id="flightHours" />
-
-    <label>How many m³ of natural gas do you consume per month?</label>
-    <input type="number" id="naturalGasM3" />
-
-    <button onclick="getCarbon()">Submit</button>
-
-    <p id="result"></p>
-    <button id="copyBtn" onclick="copyTx()" style="display: none;">Copy TX Hash</button>
-  </div>
-
+  <!-- JavaScript logic loaded from external file -->
   <script src="main.js"></script>
 </body>
 </html>
